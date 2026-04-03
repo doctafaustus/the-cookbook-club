@@ -7,7 +7,7 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #fafaf8; color: #1a1a1a; padding: 2rem; }
-  h1 { font-size: 22px; font-weight: 500; margin-bottom: 2rem; letter-spacing: -0.3px; }
+  h1 { font-size: 22px; font-weight: 500; letter-spacing: -0.3px; }
   #canvas-wrap { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
   #needle {
     position: absolute;
@@ -28,17 +28,24 @@
   #result-box { min-height: 52px; text-align: center; }
   #result-label { font-size: 13px; color: #888; margin-bottom: 4px; }
   #result-name { font-size: 22px; font-weight: 500; color: #1a1a1a; }
+  #header { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 2rem; }
+  #logo { width: 72px; height: auto; }
 </style>
 </head>
 <body>
 
-<h1>Recipe of the Week</h1>
+<div id="header">
+  <img src="images/cookbook-club-logo.png" id="logo" alt="Cookbook Club Logo">
+  <h1>Recipe of the Week</h1>
+</div>
 
 <div id="canvas-wrap">
   <div id="needle"></div>
   <canvas id="wheel"></canvas>
 </div>
 
+<audio id="snd-spin" src="sounds/spinning-wheel.mp3"></audio>
+<audio id="snd-applause" src="sounds/applause.mp3"></audio>
 <button id="spin-btn">Spin the wheel</button>
 
 <div id="result-box">
@@ -48,12 +55,16 @@
 
 <script>
 const meals = [
-  "Chicken Tikka Masala",
-  "Beef Bourguignon",
-  "Shakshuka",
+  "Tacos",
+  "Pizza",
+  "Ramen",
+  "Frittata",
+  "Curry",
   "Pad Thai",
-  "Mushroom Risotto",
-  "Tacos al Pastor"
+  "Stuffed Vegetables",
+  "Kebabs",
+  "Jambalaya",
+  "Baked Pasta"
 ];
 
 const palette = [
@@ -61,8 +72,12 @@ const palette = [
   "#457B9D",
   "#2A9D46",
   "#F4C430",
+  "#E07A2F",
+  "#9B5DE5",
   "#E63946",
+  "#457B9D",
   "#2A9D46",
+  "#F4C430",
 ];
 
 function getTextColor(hex) {
@@ -87,6 +102,8 @@ ctx.scale(dpr, dpr);
 const btn = document.getElementById('spin-btn');
 const resultLabel = document.getElementById('result-label');
 const resultName = document.getElementById('result-name');
+const sndSpin = document.getElementById('snd-spin');
+const sndApplause = document.getElementById('snd-applause');
 
 const total = meals.length;
 const arc = (2 * Math.PI) / total;
@@ -176,6 +193,8 @@ btn.addEventListener('click', () => {
   btn.disabled = true;
   resultLabel.textContent = '';
   resultName.textContent = '';
+  sndSpin.currentTime = 0;
+  sndSpin.play();
 
   const totalRotation = (6 + Math.floor(Math.random() * 4)) * 2 * Math.PI + Math.random() * 2 * Math.PI;
   const duration = 10000;
@@ -195,6 +214,10 @@ btn.addEventListener('click', () => {
       drawWheel(currentAngle);
       spinning = false;
       btn.disabled = false;
+      sndSpin.pause();
+      sndSpin.currentTime = 0;
+      sndApplause.currentTime = 0;
+      sndApplause.play();
 
       const needleAngle = 0;
       const normalized = ((needleAngle - currentAngle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
