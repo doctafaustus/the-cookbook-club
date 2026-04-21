@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alfred — Cookbook Club Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo"><img src="alfred-avatar.jpg" alt="Alfred" /></div>
+      <h1>Alfred</h1>
+      <p class="subtitle">Leaderboard butler for <strong>The Cookbook Club</strong></p>
+    </header>
+
+    <main>
+      <section class="card">
+        <label>Post to</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="channel" value="dev" checked />
+            <span># app-testing</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="channel" value="prod" />
+            <span># all-the-cookbook-club</span>
+          </label>
+        </div>
+      </section>
+
+<section class="card">
+        <label for="csvInput">Paste CSV</label>
+        <textarea
+          id="csvInput"
+          rows="10"
+          placeholder="Name,Score,Dish&#10;Julia,98,Beef Wellington&#10;Gordon,95,Coq au Vin&#10;Ina,91,Roasted Chicken"
+          spellcheck="false"
+        ></textarea>
+        <div class="actions">
+          <button id="previewBtn" class="btn-secondary">Preview table</button>
+          <button id="sendBtn" class="btn-primary">
+            <span id="sendLabel">Post to Slack</span>
+            <span id="sendSpinner" class="spinner" hidden></span>
+          </button>
+        </div>
+      </section>
+
+      <section id="previewSection" class="card preview-card" hidden>
+        <label>Preview</label>
+        <div id="previewTable"></div>
+      </section>
+
+      <div id="toast" class="toast" hidden></div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
