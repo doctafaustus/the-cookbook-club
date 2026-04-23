@@ -51,6 +51,28 @@
         <div id="previewTable"></div>
       </section>
 
+      <section class="card">
+        <label>Create Slack Poll</label>
+        <input
+          type="text"
+          id="pollQuestion"
+          placeholder="What's your question?"
+          style="margin-bottom: 0.6rem;"
+        />
+        <label for="pollAnswers">Answers <span class="optional">(comma-separated)</span></label>
+        <input
+          type="text"
+          id="pollAnswers"
+          placeholder="Beef Wellington, Coq au Vin, Roasted Chicken"
+        />
+        <div class="actions">
+          <button id="pollBtn" class="btn-primary">
+            <span id="pollLabel">Post Poll to Slack</span>
+            <span id="pollSpinner" class="spinner" hidden></span>
+          </button>
+        </div>
+      </section>
+
       <div id="toast" class="toast" hidden></div>
     </main>
   </div>

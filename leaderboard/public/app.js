@@ -6,6 +6,11 @@ const sendSpinner    = document.getElementById('sendSpinner');
 const previewSection = document.getElementById('previewSection');
 const previewTable   = document.getElementById('previewTable');
 const toast          = document.getElementById('toast');
+const pollQuestion   = document.getElementById('pollQuestion');
+const pollAnswers    = document.getElementById('pollAnswers');
+const pollBtn        = document.getElementById('pollBtn');
+const pollLabel      = document.getElementById('pollLabel');
+const pollSpinner    = document.getElementById('pollSpinner');
 
 let toastTimer;
 
@@ -86,6 +91,44 @@ previewBtn.addEventListener('click', () => {
   previewTable.innerHTML = renderPreviewTable(rows);
   previewSection.hidden = false;
   previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+pollBtn.addEventListener('click', async () => {
+  const channel = document.querySelector('input[name="channel"]:checked')?.value ?? 'dev';
+  const question = pollQuestion.value.trim();
+  const answers = pollAnswers.value.split(',').map(a => a.trim()).filter(Boolean);
+
+  if (!question) { showToast('Enter a question.', 'error'); return; }
+  if (answers.length < 2) { showToast('Enter at least 2 comma-separated answers.', 'error'); return; }
+  if (answers.length > 9) { showToast('Max 9 answers.', 'error'); return; }
+
+  pollBtn.disabled = true;
+  pollLabel.hidden = true;
+  pollSpinner.hidden = false;
+
+  try {
+    const res = await fetch('/send-poll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, answers, channel }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showToast('✓ Poll posted to Slack!', 'success');
+      pollQuestion.value = '';
+      pollAnswers.value = '';
+    } else {
+      showToast(data.error ?? 'Something went wrong.', 'error');
+    }
+  } catch (err) {
+    showToast('Network error — is the server running?', 'error');
+  } finally {
+    pollBtn.disabled = false;
+    pollLabel.hidden = false;
+    pollSpinner.hidden = true;
+  }
 });
 
 sendBtn.addEventListener('click', async () => {
